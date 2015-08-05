@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -d /etc/openvpn ];then
+	/system/downloadFile https://www.privateinternetaccess.com/openvpn/openvpn.zip /tmp/openvpn.zip
+	/system/makedir /tmp/openvpn
+	unzip /tmp/openvpn.zip -d /tmp/openvpn
+	/system/makedir /etc/openvpn/pia
+	mv /tmp/openvpn/* /etc/openvpn/pia
+	rm -rf /tmp/openvpn
+else
+	/show/colecho "Openvpn not installed [WARNING]" $WARN
+	echo "Type /do/pia/install"
+fi

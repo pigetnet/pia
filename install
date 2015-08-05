@@ -1,0 +1,7 @@
+#!/bin/bash
+/system/downloadModule openvpn
+/do/openvpn/install
+/do/pia/download
+
+echo "You need to setup pia (vpn location/login)"
+echo "Type /do/pia/setup"

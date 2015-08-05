@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ -d "/etc/openvpn/pia/" ];then
+for openvpnFile in /etc/openvpn/pia/*.ovpn
+do
+    openvpnFileBasename=$(basename "$openvpnFile")
+    menu_options[ $i ]="${openvpnFileBasename%.*}"
+   (( i++ ))
+    menu_options[ $i ]=""
+   (( i++ ))
+done
+
+vpnLocation_selected=$(whiptail --backtitle "Wifi Configuration" --title "Private Internet Access Configuration" --menu "Choose your VPN location" 0 0 0 "${menu_options[@]}" 3>&1 1>&2 2>&3 )
+
+if [ "$vpnLocation_selected" == "" ]
+        then
+        /show/colecho "Cancelled [SKIPPED]" $INFO
+        exit 1
+else
+
+
+/show/listecho "You choose $vpnLocation_selected" $OK
+cp -v "/etc/openvpn/pia/$vpnLocation_selected.ovpn" "/etc/openvpn/pia.conf"
+
+read -p "Username:" username
+read -p "Password:" password
+echo $username > /etc/openvpn/login.conf
+echo $password >> /etc/openvpn/login.conf
+echo "auth-user-pass login.conf" >> /etc/openvpn/pia.conf
+chmod 400 /etc/openvpn/login.conf
+cp -v /etc/openvpn/pia/ca.crt /etc/openvpn
+cp -v /etc/openvpn/pia/crl.pem /etc/openvpn
+
+/system/autoBackup /etc/default/openvpn
+cp -v /do/pia/default/openvpn /etc/default/openvpn
+
+/system/restart openvpn
+fi
+
+else
+	/do/pia/download
+	/do/pia/setup
+fi
