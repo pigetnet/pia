@@ -1,0 +1,9 @@
+#!/bin/bash
+country=$1
+if [ -f /etc/openvpn/pia/$country.ovpn ];then
+	cp -v "/etc/openvpn/pia/$country.ovpn" "/etc/openvpn/pia.conf"
+	echo "auth-user-pass login.conf" >> /etc/openvpn/pia.conf
+else
+	ls /etc/openvpn/pia/
+fi
+/system/restart openvpn

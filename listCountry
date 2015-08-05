@@ -1,0 +1,7 @@
+#!/bin/bash
+for openvpnFile in /etc/openvpn/pia/*.ovpn
+do
+    openvpnFileBasename=$(basename "$openvpnFile")
+    echo "${openvpnFileBasename%.*}"
+done
+
